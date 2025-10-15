@@ -1,0 +1,5 @@
+# requirements.txt
+
+Faker==18.9.0
+mysql-connector-python==8.1.0
+python-dotenv==1.0.1
