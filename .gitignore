@@ -1,46 +1,20 @@
-# .gitignore
-
 # Python
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
+
+# Virtual Environments
 env/
 venv/
-ENV/
 .venv/
 
-# Virtual envs
-venv/
-env/
+# Environment Variables (Secrets)
+.env
 
-# IDEs
+# IDE Settings
 .vscode/
 .idea/
-
-# macOS
 .DS_Store
-
-# dotenv
-.env
-
-# MySQL dump
-*.sql
-
-# PyCharm
 *.iml
 
-# Jupyter
-.ipynb_checkpoints/
-
-
-__pycache__/
-*.pyc
-venv/
-
-# Environment
-.env
-
-# OS
-.DS_Store
-Thumbs.db
+# Database
+*.sql
