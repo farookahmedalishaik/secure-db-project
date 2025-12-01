@@ -32,3 +32,15 @@ env/
 
 # Jupyter
 .ipynb_checkpoints/
+
+
+__pycache__/
+*.pyc
+venv/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
