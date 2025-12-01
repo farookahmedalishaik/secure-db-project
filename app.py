@@ -55,22 +55,43 @@ def main():
             if sess:
                 print(f"Logged in as Group: {sess['user_group']}")
                 
-                # Ask for row limit
-                limit_input = input("How many rows to display? [Default 15]: ").strip()
-                limit = int(limit_input) if limit_input.isdigit() else 15
+                #SUB-MENU FOR QUERY
+                print("\n   [1] View Top N Rows")
+                print("   [2] Search by Specific ID")
+                q_type = input("   Select Query Type: ").strip()
                 
+                # Fetch ALL data first (Required for Completeness/Merkle Check)
                 results, status = query_patients(sess)
-                
                 print(f"\nCompleteness Check: {status}")
                 print(f"{'ID':<5} {'First':<15} {'Last':<15} {'Age':<5} {'Gender':<10} {'Integrity'}")
                 print("-" * 65)
+
+                if q_type == "2":
+                    # --- SEARCH BY ID LOGIC ---
+                    try:
+                        target_id = int(input("   Enter Patient ID to find: "))
+                        found = False
+                        for r in results:
+                            if r['id'] == target_id:
+                                print(f"{r['id']:<5} {r['first']:<15} {r['last']:<15} {r['age']:<5} {r['gender']:<10} {r['integrity']}")
+                                found = True
+                                break
+                        if not found:
+                            print(f"   ❌ Patient ID {target_id} not found.")
+                    except ValueError:
+                        print("   ❌ Invalid ID format.")
                 
-                # Use the user-defined limit
-                for r in results[:limit]: 
-                    print(f"{r['id']:<5} {r['first']:<15} {r['last']:<15} {r['age']:<5} {r['gender']:<10} {r['integrity']}")
-                
-                if len(results) > limit:
-                    print(f"... ({len(results) - limit} more rows hidden) ...")
+                else:
+                    # --- DEFAULT TOP N ROWS LOGIC ---
+                    limit_input = input("   How many rows to display? [Default 15]: ").strip()
+                    limit = int(limit_input) if limit_input.isdigit() else 15
+                    
+                    for r in results[:limit]: 
+                        print(f"{r['id']:<5} {r['first']:<15} {r['last']:<15} {r['age']:<5} {r['gender']:<10} {r['integrity']}")
+                    
+                    if len(results) > limit:
+                        print(f"... ({len(results) - limit} more rows hidden) ...")
+
             else:
                 print("Login Failed")
 
