@@ -1,3 +1,5 @@
+# auth.py
+
 from config import get_db_conn
 from crypto_utils import hash_password, verify_password
 

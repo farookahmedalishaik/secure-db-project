@@ -1,3 +1,5 @@
+#access_control.py
+
 import os
 from config import get_db_conn, load_keys
 from crypto_utils import encrypt_val, decrypt_val, compute_hmac, get_row_bytes
@@ -40,7 +42,7 @@ def insert_patient(session, first, last, gender, age, weight, height, history):
                       weight, height, history, r_mac, leaf))
     conn.commit()
     conn.close()
-    print("✅ Record inserted successfully.")
+    print(" Record inserted successfully.")
 
 def update_client_trust():
     """
@@ -57,7 +59,7 @@ def update_client_trust():
     root, _ = build_merkle_tree(leaves)
     with open(CLIENT_ROOT_FILE, "wb") as f:
         f.write(root)
-    print(f"🔄 Trusted Root Updated: {root.hex()[:8]}...")
+    print(f" Trusted Root Updated: {root.hex()[:8]}...")
 
 def get_trusted_root():
     """Reads the locally saved trusted root."""
@@ -78,33 +80,33 @@ def query_patients(session):
     rows = cur.fetchall()
     conn.close()
 
-    # --- 1. COMPLETENESS CHECK (Merkle Tree) ---
+    # 1. COMPLETENESS CHECK (Merkle Tree)
     leaves = [r['merkle_leaf'] for r in rows]
     server_root, _ = build_merkle_tree(leaves)
     client_root = get_trusted_root()
     
-    root_status = "✅ OK"
+    root_status = "OK"
     if client_root is None:
-        root_status = "⚠️ No Local Trust Found (Please run Option 4 or 6 to Init)"
+        root_status = "No Local Trust Found (Please run Option 4 or 6 to Init)"
     elif server_root != client_root:
-        root_status = "❌ FAIL (Data Deleted or Tampered!)"
+        root_status = "FAIL (Data Deleted or Tampered!)"
 
     results = []
     for r in rows:
-        # --- 2. INTEGRITY CHECK (HMAC) ---
-        # Re-compute hash of the data we received
+        # 2. INTEGRITY CHECK (HMAC)
+        # Re-compute hash of the data that received
         raw = get_row_bytes(r['first_name'], r['last_name'], r['weight'], r['height'], r['health_history'])
         calc_mac = compute_hmac(hmac_k, raw)
         
         # Compare with the HMAC stored in the database
         hmac_ok = (calc_mac == r['row_hmac'])
 
-        # --- 3. CONFIDENTIALITY (Decryption) ---
+        # 3. CONFIDENTIALITY (Decryption)
         age = decrypt_val(aes_k, r['age_enc'], r['age_nonce'], r['age_tag'], int)
         gender = decrypt_val(aes_k, r['gender_enc'], r['gender_nonce'], r['gender_tag'], int)
         gender_str = "Male" if gender == 1 else "Female"
 
-        # --- 4. ACCESS CONTROL (Redaction) ---
+        # 4. ACCESS CONTROL (Redaction)
         f, l = r['first_name'], r['last_name']
         
         # If user is Group R (Reader), hide the names

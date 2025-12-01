@@ -1,9 +1,11 @@
+# populate.py
+
 from faker import Faker
 import random
 from access_control import insert_patient, update_client_trust
 from auth import create_user
 
-# Realistic medical data pools
+# Realistic medical health history
 HISTORY_HEALTHY = [
     "No significant medical history.",
     "Patient is in good health; regular checkups.",
@@ -45,10 +47,9 @@ def get_realistic_history():
         return random.choice(HISTORY_SERIOUS)
 
 def seed_data(count=100):
-    print(f"🌱 Seeding {count} fake patients with realistic history...")
+    print(f"Seeding {count} fake patients with realistic history...")
     fake = Faker()
     
-    # --- CHANGE: Create 'doctor' instead of 'admin_h' ---
     # We create the doctor user here to ensure they exist 
     # so we can use their permissions to insert data.
     try: 
@@ -76,4 +77,4 @@ def seed_data(count=100):
         
     # Update merkle root after seeding
     update_client_trust()
-    print("✅ Seeding complete.")
+    print("Seeding complete.")

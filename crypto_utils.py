@@ -1,9 +1,11 @@
+# crypto_utils.py
+
 import hashlib
 import hmac
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
-# --- Password Hashing (PBKDF2) ---
+# Password Hashing (PBKDF2)
 def hash_password(password):
     salt = get_random_bytes(16)
     pwd_hash = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
@@ -13,7 +15,7 @@ def verify_password(stored_salt, stored_hash, input_password):
     check_hash = hashlib.pbkdf2_hmac('sha256', input_password.encode(), stored_salt, 100000)
     return check_hash == stored_hash
 
-# --- AES-GCM Encryption (Confidentiality) ---
+# AES-GCM Encryption (Confidentiality)
 def encrypt_val(key, value):
     """Encrypts a value (int or str) -> returns (ciphertext, nonce, tag)"""
     cipher = AES.new(key, AES.MODE_GCM)
@@ -30,7 +32,7 @@ def decrypt_val(key, ciphertext, nonce, tag, value_type=str):
     except ValueError:
         return "[INTEGRITY FAIL]"
 
-# --- HMAC & Canonicalization (Row Integrity) ---
+# HMAC & Canonicalization (Row Integrity)
 def get_row_bytes(first, last, weight, height, history):
     """Creates a standard byte string from row data for hashing"""
     s = f"{first}|{last}|{weight}|{height}|{history}"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# demo.py
+# app.py
 
 import sys
 import base64
@@ -53,9 +53,9 @@ def main():
             p = getpass("Password: ")
             sess = login(u, p)
             if sess:
-                print(f"✅ Logged in as Group: {sess['user_group']}")
+                print(f"Logged in as Group: {sess['user_group']}")
                 
-                # <--- CHANGE #2: Ask for limit --->
+                # Ask for row limit
                 limit_input = input("How many rows to display? [Default 15]: ").strip()
                 limit = int(limit_input) if limit_input.isdigit() else 15
                 
@@ -72,7 +72,7 @@ def main():
                 if len(results) > limit:
                     print(f"... ({len(results) - limit} more rows hidden) ...")
             else:
-                print("❌ Login Failed")
+                print("Login Failed")
 
         elif choice == "6":
             u = input("Username (Group H): ")
@@ -82,7 +82,6 @@ def main():
             if sess and sess['user_group'] == 'H':
                 print("\n--- Enter Patient Details ---")
                 try:
-                    # <--- CHANGE #3: Better Prompts --->
                     f_name = input("First Name: ")
                     l_name = input("Last Name: ")
                     gender = int(input("Gender (0=Female, 1=Male): "))
@@ -94,24 +93,23 @@ def main():
                     insert_patient(sess, f_name, l_name, gender, age, weight, height, hist)
                     update_client_trust()
                 except ValueError:
-                    print("❌ Error: Please enter valid numbers for Age/Weight/Height.")
+                    print("Error: Please enter valid numbers for Age/Weight/Height.")
                 except Exception as e:
-                    print(f"❌ Error: {e}")
+                    print(f"Error: {e}")
             else:
-                print("❌ Access Denied: Only Group H can insert data.")
+                print("Access Denied: Only Group H can insert data.")
 
         elif choice == "7":
-            # <--- CHANGE #1: Create New User Logic --->
-            print("\n--- Create New System User ---")
+            print("\n--- Create New User ---")
             new_u = input("New Username: ").strip()
             new_p = getpass("New Password: ")
             new_g = input("Group (H for Full Access, R for Restricted): ").strip().upper()
             
             if new_g not in ['H', 'R']:
-                print("❌ Error: Group must be 'H' or 'R'.")
+                print("Error: Group must be 'H' or 'R'.")
             else:
                 create_user(new_u, new_p, new_g)
-                print(f"✅ User '{new_u}' added to Group '{new_g}'.")
+                print(f"User '{new_u}' added to Group '{new_g}'.")
 
         elif choice == "0":
             print("Exiting.")
