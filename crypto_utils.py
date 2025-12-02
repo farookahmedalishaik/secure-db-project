@@ -11,9 +11,11 @@ def hash_password(password):
     pwd_hash = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
     return salt, pwd_hash
 
+# Verify PBKDF2 hash using constant-time comparison to mitigate timing attacks.
 def verify_password(stored_salt, stored_hash, input_password):
     check_hash = hashlib.pbkdf2_hmac('sha256', input_password.encode(), stored_salt, 100000)
-    return check_hash == stored_hash
+    # Use constant-time comparison to avoid timing attacks
+    return hmac.compare_digest(check_hash, stored_hash)
 
 # AES-GCM Encryption (Confidentiality)
 def encrypt_val(key, value):

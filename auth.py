@@ -2,9 +2,14 @@
 
 from config import get_db_conn
 from crypto_utils import hash_password, verify_password
+import mysql.connector
 
 def create_user(username, password, group):
     """Register a new user (Group H or R)"""
+    if group not in ('H', 'R'):
+        print("Error: Invalid group. Use 'H' or 'R'.")
+        return
+
     salt, p_hash = hash_password(password)
     conn = get_db_conn()
     cur = conn.cursor()
@@ -15,10 +20,14 @@ def create_user(username, password, group):
         )
         conn.commit()
         print(f"Created user {username} ({group})")
+    except mysql.connector.IntegrityError as e:
+        # Typically thrown for UNIQUE constraint violations
+        print(f"User creation failed: username '{username}' may already exist.")
     except Exception as e:
         print(f"User creation failed: {e}")
     finally:
         conn.close()
+
 
 def login(username, password):
     """Returns user dict if valid, else None"""

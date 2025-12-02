@@ -46,7 +46,10 @@ def main():
             print("Default users check complete.")
 
         elif choice == "4":
-            seed_data(100)
+            try:
+                seed_data(100)
+            except RuntimeError as e:
+                print(f"ERROR: {e}")
 
         elif choice == "5":
             u = input("Username: ")
@@ -61,7 +64,13 @@ def main():
                 q_type = input("   Select Query Type: ").strip()
                 
                 # Fetch ALL data first (Required for Completeness/Merkle Check)
-                results, status = query_patients(sess)
+                
+                try:
+                    results, status = query_patients(sess)
+                except RuntimeError as e:
+                    print(f"ERROR: {e}")
+                    continue
+
                 print(f"\nCompleteness Check: {status}")
                 print(f"{'ID':<5} {'First':<15} {'Last':<15} {'Age':<5} {'Gender':<10} {'Integrity'}")
                 print("-" * 65)

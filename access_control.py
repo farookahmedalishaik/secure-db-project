@@ -1,6 +1,7 @@
 #access_control.py
 
 import os
+import hmac
 from config import get_db_conn, load_keys
 from crypto_utils import encrypt_val, decrypt_val, compute_hmac, get_row_bytes
 from integrity import build_merkle_tree, sha256
@@ -16,7 +17,11 @@ def insert_patient(session, first, last, gender, age, weight, height, history):
     if session['user_group'] != 'H':
         raise PermissionError("Access Denied: Group H only.")
 
-    aes_k, hmac_k = load_keys()
+    try:
+        aes_k, hmac_k = load_keys()
+    except Exception as e:
+        # Friendly error: missing keys in .env
+        raise RuntimeError("Crypto keys not found. Please set AES_KEY_B64 and HMAC_KEY_B64 in your .env (use Option 2 to generate).") from e
     
     # 1. Encrypt Sensitive Data (Age & Gender)
     g_enc, g_n, g_t = encrypt_val(aes_k, int(gender))
@@ -73,7 +78,12 @@ def query_patients(session):
     Fetches data, verifies Integrity/Completeness, and Redacts based on group.
     RETURNS TWO VALUES: (results_list, status_message)
     """
-    aes_k, hmac_k = load_keys()
+
+    try:
+        aes_k, hmac_k = load_keys()
+    except Exception as e:
+        raise RuntimeError("Crypto keys not found. Please set AES_KEY_B64 and HMAC_KEY_B64 in  .env (use Option 2 to generate).")
+
     conn = get_db_conn()
     cur = conn.cursor(dictionary=True)
     cur.execute("SELECT * FROM patients ORDER BY id")
@@ -99,7 +109,7 @@ def query_patients(session):
         calc_mac = compute_hmac(hmac_k, raw)
         
         # Compare with the HMAC stored in the database
-        hmac_ok = (calc_mac == r['row_hmac'])
+        hmac_ok = hmac.compare_digest(calc_mac, r['row_hmac'])
 
         # 3. CONFIDENTIALITY (Decryption)
         age = decrypt_val(aes_k, r['age_enc'], r['age_nonce'], r['age_tag'], int)
