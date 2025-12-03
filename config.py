@@ -1,5 +1,14 @@
 # config.py
 
+'''
+config.py handles configuration and secrets. 
+
+1) It uses dotenv to load credentials from the environment (avoiding hardcoding)
+
+2) mysql.connector to establish database connections via get_db_conn, and base64 to decode stored encryption keys via load_keys
+'''
+
+
 import os
 import mysql.connector
 import base64

@@ -1,4 +1,17 @@
-#access_control.py
+# access_control.py
+
+'''
+access_control.py acts as the security gateway for the application, enforcing Confidentiality, Integrity, Availability and Access Control.
+
+1) When insert_patient is called, it allows only Group H and then secures the data by encrypting (Age, Gender) fields using AES-GCM.
+
+2) And sealing the row against tampering with an HMAC-SHA256 signature.
+
+3) To prevent history from being deleted, it tracks database state using Merkle Tree, saving a "trusted root" locally
+
+4) when query_patients retrieves data, it validates the local Merkle root to detect deletions, 
+re-calculates HMACs to catch data tampering, decrypts the private fields, and automatically redacts names for Group R users to protect privacy.
+'''
 
 import os
 import hmac
@@ -48,6 +61,7 @@ def insert_patient(session, first, last, gender, age, weight, height, history):
     conn.commit()
     conn.close()
     print(" Record inserted successfully.")
+
 
 def update_client_trust():
     """

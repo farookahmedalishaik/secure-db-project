@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # app.py
 
+'''
+app.py serves as Central Controller and Command Line Interface (CLI). 
+It orchestrates the entire application by importing and executing logic from all the other modules based on user input.
+'''
+
 import sys
 import base64
 from getpass import getpass

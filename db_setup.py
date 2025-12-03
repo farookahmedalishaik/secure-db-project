@@ -1,5 +1,14 @@
 # db_setup.py
 
+'''
+db_setup.py is the Schema Initializer, responsible for building the database structure from scratch.
+
+run_schema_native fn establishes a raw connection to the MySQL server using mysql.connector.
+It reads the external schema.sql file, uses String Parsing (split(';')) to isolate individual SQL commands,
+and executes them sequentially via a Database Cursor to create tables and define constraints, ensuring all changes are saved with a final Commit.
+'''
+
+
 import os
 import mysql.connector
 from getpass import getpass

@@ -1,5 +1,21 @@
 # crypto_utils.py
 
+'''
+crypto_utils.py acts necessary for core mathematical functions for security.
+
+1) hash_password/verify_password (Authentication): Uses PBKDF2-SHA256 with Salting (100k iterations) to secure credentials.
+It employs Constant-Time Comparison (hmac.compare_digest) to prevent timing attacks during login.
+
+2) encrypt_val/decrypt_val (Confidentiality): Uses AES-GCM (Galois/Counter Mode) to encrypt sensitive data.
+This mode provides both encryption and an Authentication Tag to instantly detect if the ciphertext was tampered with.
+
+3) compute_hmac (Integrity): Uses HMAC-SHA256 to generate cryptographic signature for database rows,ensuring data hasn't been altered by unauthorized users.
+
+4) get_row_bytes (Formatting): Performs Canonicalization by joining values with |, ensuring data is formatted identically every time before hashing.
+'''
+
+
+
 import hashlib
 import hmac
 from Crypto.Cipher import AES

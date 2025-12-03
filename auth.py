@@ -1,5 +1,17 @@
 # auth.py
 
+'''
+auth.py acts as the Authentication Manager, responsible for securely registering and verifying user identities.
+
+1) create_user fn is called, it first performs Input Validation to ensure the user belongs to a valid group ('H' or 'R'), 
+then protects credentials by Salted Hashing—generating (unique random "salt") & combined with password (via hash_password) so plaintext passwords never stored in database. 
+
+2) When a user attempts to access the system via login, the script retrieves their stored credentials and verifies their identity
+by using verify_password to re-hash the input password with the stored salt, confirming access only if the result matches the database record perfectly.
+'''
+
+
+
 from config import get_db_conn
 from crypto_utils import hash_password, verify_password
 import mysql.connector

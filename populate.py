@@ -1,5 +1,15 @@
 # populate.py
 
+'''
+populate.py serves as the Data Generator for simulation.
+
+1)get_realistic_history fn is resposible for medical data follows real-world health contexts
+
+2) seed_data leverages the Faker library for 100 synthetic identities, simulating an authorized session to drive insert_patient for bulk encrypted insertion before refreshing the Merkle Root.
+'''
+
+
+
 from faker import Faker
 import random
 from access_control import insert_patient, update_client_trust

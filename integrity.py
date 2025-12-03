@@ -1,5 +1,19 @@
 # integrity.py
 
+''' 
+integrity.py responsible for implementing Merkle Trees to detect if data has been deleted or if the database history has been altered.
+
+1) sha256 (Hashing): A wrapper for SHA-256 that converts raw data into cryptographic byte digests used as tree nodes.
+
+2) build_merkle_tree fn (Tree Construction): Iteratively combines and hashes pairs of "leaf" hashes (left + right) to produce a single Merkle Root. 
+It handles odd numbers of nodes by using Node Duplication (hashing the last node with itself) to ensure the tree is always balanced.
+
+3) get_merkle_proof fn (Verification): Generates a Merkle Proof (a specific path of sibling hashes) allowing a client to mathematically prove a 
+specific record exists in the set without downloading the entire database.
+'''
+
+
+
 import hashlib
 
 def sha256(data):
