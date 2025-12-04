@@ -33,7 +33,7 @@ def create_user(username, password, group):
         conn.commit()
         print(f"Created user {username} ({group})")
     except mysql.connector.IntegrityError as e:
-        # Typically thrown for UNIQUE constraint violations
+        #for UNIQUE constraint violations
         print(f"User creation failed: username '{username}' may already exist.")
     except Exception as e:
         print(f"User creation failed: {e}")

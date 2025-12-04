@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # app.py
 
 '''
@@ -81,7 +80,7 @@ def main():
                 print("-" * 65)
 
                 if q_type == "2":
-                    # --- SEARCH BY ID LOGIC ---
+                    # SEARCH BY ID LOGIC
                     try:
                         target_id = int(input("   Enter Patient ID to find: "))
                         found = False
@@ -91,12 +90,12 @@ def main():
                                 found = True
                                 break
                         if not found:
-                            print(f"   ❌ Patient ID {target_id} not found.")
+                            print(f"Patient ID {target_id} not found.")
                     except ValueError:
-                        print("   ❌ Invalid ID format.")
+                        print("Invalid ID format.")
                 
                 else:
-                    # --- DEFAULT TOP N ROWS LOGIC ---
+                    #DEFAULT TOP N ROWS LOGIC
                     limit_input = input("   How many rows to display? [Default 15]: ").strip()
                     limit = int(limit_input) if limit_input.isdigit() else 15
                     

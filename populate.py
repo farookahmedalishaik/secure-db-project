@@ -60,14 +60,13 @@ def seed_data(count=100):
     print(f"Seeding {count} fake patients with realistic history...")
     fake = Faker()
     
-    # We create the doctor user here to ensure they exist 
-    # so we can use their permissions to insert data.
+    #create the doctor user here to ensure they exist, so that way we can use their permissions to insert data.
     try: 
         create_user("doctor", "pwd_d", "H")
     except: 
         pass
         
-    # Simulate the Doctor's session (Group H)
+    # Simulate the Doctor (Group H)
     session = {"user_group": "H"}
     
     for i in range(count):
