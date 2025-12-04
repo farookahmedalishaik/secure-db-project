@@ -144,6 +144,8 @@ def query_patients(session):
             "age": age, 
             "gender": gender_str, 
             "weight": r['weight'],
+            "height": r['height'],         
+            "history": r['health_history'],
             "integrity": "Pass" if hmac_ok else "FAIL"
         })
     
